@@ -7,7 +7,7 @@
           <el-input v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password"></el-input>
+          <el-input type="password" v-model="form.password" @keyup.enter.native="login"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="login">登录</el-button>
@@ -20,7 +20,7 @@
 
 <script>
 // 导入axios
-import axios from 'axios'
+// import axios from 'axios'
 
 export default {
   data() {
@@ -51,13 +51,13 @@ export default {
         // console.log(valid)
         if (valid) {
           // 校验成功，发送axios请求数据
-          axios({
+          this.axios({
             method: 'post',
-            url: 'http://localhost:8888/api/private/v1/login',
+            url: 'login',
             data: this.form
           }).then(res => {
-            console.log(res)
-            if (res.data.meta.status === 200) {
+            let { meta: { status, msg }, data: { token } } = res
+            if (status === 200) {
               // 请求数据成功
               // 提示信息
               this.$message({
@@ -66,12 +66,12 @@ export default {
                 duration: 2000
               })
               // 在本地存储token
-              localStorage.setItem('token', res.data.data.token)
+              localStorage.setItem('token', token)
               // 跳转到home组件
               this.$router.push('/home')
             } else {
               this.$message({
-                message: '登录失败',
+                message: msg,
                 type: 'error',
                 duration: 2000
               })
