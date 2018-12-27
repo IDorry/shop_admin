@@ -2,7 +2,7 @@
   <div class="category">
     <el-button type="success" plain @click="showAddDialog">商品分类</el-button>
     <!-- 商品列表 -->
-    <el-table :data="categoryList" style="40%">
+    <el-table :data="categoryList" style="40%" v-loading="loading" element-loading-text="拼命加载中" element-loading-background="rgba(255,255,255)">
       <el-table-tree-column
       label="分类名称"
       prop="cat_name"
@@ -82,11 +82,13 @@ export default {
         cat_name: [
           { required: true, message: '请输入分类名称', trigger: 'blur' }
         ]
-      }
+      },
+      loading: true
     }
   },
   methods: {
     async getCategoryList() {
+      this.loading = true
       let res = await this.axios.get('categories', {
         params: {
           type: 3,
@@ -94,9 +96,9 @@ export default {
           pagesize: this.pageSize
         }
       })
-      console.log(res)
       let { meta: { status }, data: { result, total } } = res
       if (status === 200) {
+        this.loading = false
         this.categoryList = result
         this.total = total
       }
