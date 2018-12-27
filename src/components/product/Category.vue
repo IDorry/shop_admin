@@ -22,6 +22,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页功能 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[10, 15, 20, 25]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      background>
+    </el-pagination>
 
     <!-- 添加分类对话框 -->
     <el-dialog title="添加分类" :visible.sync="addDialogVisible" width="40%">
@@ -54,6 +65,7 @@ export default {
       categoryList: [],
       pageSize: 10,
       currentPage: 1,
+      total: 0,
       addDialogVisible: false,
       addForm: {
         cat_pid: [],
@@ -118,6 +130,14 @@ export default {
           this.$message.error('分类添加失败')
         }
       })
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getCategoryList()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getCategoryList()
     }
   },
   created() {
