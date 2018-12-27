@@ -47,39 +47,31 @@ export default {
     },
     login() {
       // console.log(this.$refs.form.validate)
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate(async valid => {
         // console.log(valid)
-        if (valid) {
-          // 校验成功，发送axios请求数据
-          this.axios({
-            method: 'post',
-            url: 'login',
-            data: this.form
-          }).then(res => {
-            let { meta: { status, msg }, data: { token } } = res
-            if (status === 200) {
-              // 请求数据成功
-              // 提示信息
-              this.$message({
-                message: '登录成功啦',
-                type: 'success',
-                duration: 2000
-              })
-              // 在本地存储token
-              localStorage.setItem('token', token)
-              // 跳转到home组件
-              this.$router.push('/home')
-            } else {
-              this.$message({
-                message: msg,
-                type: 'error',
-                duration: 2000
-              })
-            }
-          })
+        if (!valid) return false
+        // 校验成功，发送axios请求数据
+        let res = await this.axios({
+          method: 'post',
+          url: 'login',
+          data: this.form
+        })
+        console.log(res)
+        let { meta: { status, msg }, data: { token } } = res
+        if (status === 200) {
+          // 请求数据成功
+          // 提示信息
+          this.$message.success('登录成功')
+          // 在本地存储token
+          localStorage.setItem('token', token)
+          // 跳转到home组件
+          this.$router.push('/home')
         } else {
-          // 校验失败
-          return false
+          this.$message({
+            message: msg,
+            type: 'error',
+            duration: 2000
+          })
         }
       })
     }

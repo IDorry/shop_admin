@@ -9,6 +9,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/base.less'
 // 导入axios
 import axios from 'axios'
+
+// 1.使用element-tree-grid
+import ElTreeGrid from 'element-tree-grid'
+// 2.注册为全局组件
+Vue.component('el-table-tree-column', ElTreeGrid)
+
 // 把axios绑定到vue的原型
 Vue.prototype.axios = axios
 // 给axios对象设置一个全局的默认baseURL,后续接口可以不用写baseURL了
