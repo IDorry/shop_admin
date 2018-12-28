@@ -4,11 +4,15 @@
     <el-button type="success" plain>添加商品</el-button>
     <!-- 表格 -->
     <el-table :data="goodsList">
-      <el-table-column type="index"></el-table-column>
+      <el-table-column type="index" :index="indexMethod"></el-table-column>
       <el-table-column label="商品名称" prop="goods_name"></el-table-column>
       <el-table-column label="商品价格" prop="goods_price"></el-table-column>
       <el-table-column label="商品重量" prop="goods_weight"></el-table-column>
-      <el-table-column label="创建时间" prop="add_time"></el-table-column>
+      <el-table-column label="创建时间">
+        <template slot-scope="{row}">
+          {{row.add_time | datefilter}}
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="{row}">
           <el-button type="primary" icon="el-icon-edit" size="mini" plain></el-button>
@@ -63,6 +67,9 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.getGoodsList()
+    },
+    indexMethod(index) {
+      return index + 1 + (this.currentPage - 1) * this.pageSize
     }
   },
   created() {
